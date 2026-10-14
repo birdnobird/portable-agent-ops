@@ -26,6 +26,7 @@ These are the reason this exists as a skill rather than as advice. Every one of 
 | Non-ASCII repository name | GitHub rejects creation | Repository names are limited to an ASCII subset; the display name belongs in the description |
 | String-concatenated HTTP chunks | Hash mismatch when verifying a downloaded file — looks like the repo is corrupt | Multi-byte UTF-8 characters were split across chunks and replaced with `EF BF BD` |
 | `curl` reporting the network is down | Every `curl` call fails while another runtime succeeds | Different TLS stacks; the probe was wrong, not the network |
+| A push producing no output for minutes | Nothing happens; no error, no progress | The connection silently stalls — set `http.lowSpeedLimit` / `http.lowSpeedTime` so it fails fast and can be retried |
 
 The last two share a lesson the skill states outright: **when a hash mismatch appears, suspect your download path before you suspect the repository.**
 

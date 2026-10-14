@@ -76,6 +76,11 @@ A rehearsal of this (two devices, one appending to its own inbox and one editing
 - Some Windows setups need `git config --global http.sslbackend openssl`. The SChannel default can fail against GitHub with `SEC_E_NO_CREDENTIALS`. **Verify on the target machine rather than assuming.**
 - Prefer a credential helper already authorized on the machine (for example `gh auth setup-git`) over asking the user for a token. **The user should never paste a token into chat.**
 - A push can fail with `Connection was reset`; retry a few times before investigating.
+- **A push can also hang indefinitely with no output at all.** Set a low-speed cutoff so it fails fast instead of blocking forever:
+  ```bash
+  git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=30 push origin main
+  ```
+  This exact case was observed: one push produced no output for minutes, and the retry with these flags succeeded immediately. Do not keep waiting on a silent push — verify the remote ref independently, then retry.
 - An error mentioning `couldn't create signal pipe` or a failed `prompt script` does **not** by itself mean the push failed. Check the actual refs.
 - Writing outside the agent's sandbox (persistent environment variables, files in another tool's config directory) may require elevated file permissions.
 
